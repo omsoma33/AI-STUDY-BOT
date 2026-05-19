@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <title>AI's Second Brain</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <span class="logo-icon">🧠</span>
+        <span class="logo-text">Second Brain</span>
+      </div>
+      <button class="sidebar-close" id="sidebarClose">✕</button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item active" data-tab="chat">
+        <span class="nav-icon">💬</span> Chat
+      </button>
+      <button class="nav-item" data-tab="notes">
+        <span class="nav-icon">📝</span> Notes
+      </button>
+      <button class="nav-item" data-tab="flashcards">
+        <span class="nav-icon">🃏</span> Flashcards
+      </button>
+      <button class="nav-item" data-tab="quiz">
+        <span class="nav-icon">🎯</span> Quiz Me
+      </button>
+      <button class="nav-item" data-tab="summary">
+        <span class="nav-icon">📄</span> Summarize
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="model-badge">Powered by Claude</div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main" id="main">
+
+    <!-- Top Bar -->
+    <header class="topbar">
+      <button class="hamburger" id="hamburger">☰</button>
+      <h1 class="page-title" id="pageTitle">Chat with AI</h1>
+      <button class="clear-btn" id="clearBtn">Clear</button>
+    </header>
+
+    <!-- ── TAB: CHAT ── -->
+    <section class="tab-content active" id="tab-chat">
+      <div class="chat-messages" id="chatMessages">
+        <div class="message ai">
+          <div class="message-avatar">🧠</div>
+          <div class="message-bubble">
+            Hey! I'm your AI Study Buddy. Ask me anything — explain a concept, help with homework, summarize text, or quiz you on a topic. What are we studying today?
+          </div>
+        </div>
+      </div>
+      <div class="chat-input-area">
+        <textarea class="chat-input" id="chatInput" placeholder="Ask anything… e.g. Explain Newton's 3rd law" rows="1"></textarea>
+        <button class="send-btn" id="sendBtn">➤</button>
+      </div>
+    </section>
+
+    <!-- ── TAB: NOTES ── -->
+    <section class="tab-content" id="tab-notes">
+      <div class="notes-toolbar">
+        <button class="tool-btn active" id="notesNewBtn">+ New Note</button>
+        <button class="tool-btn" id="notesSummarizeBtn">✨ AI Summarize</button>
+      </div>
+      <div class="notes-container">
+        <div class="notes-list" id="notesList"></div>
+        <div class="note-editor-wrap" id="noteEditorWrap">
+          <input class="note-title-input" id="noteTitleInput" placeholder="Note title…" />
+          <textarea class="note-body-input" id="noteBodyInput" placeholder="Write your notes here…"></textarea>
+          <div class="note-actions">
+            <button class="tool-btn" id="noteSaveBtn">💾 Save</button>
+            <button class="tool-btn danger" id="noteDeleteBtn">🗑 Delete</button>
+          </div>
+          <div class="ai-summary-box" id="aiSummaryBox" style="display:none">
+            <h4>AI Summary</h4>
+            <p id="aiSummaryText"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── TAB: FLASHCARDS ── -->
+    <section class="tab-content" id="tab-flashcards">
+      <div class="flashcard-gen-area">
+        <p class="section-label">Paste text or a topic and let AI generate flashcards:</p>
+        <textarea class="gen-input" id="flashcardInput" placeholder="e.g. The causes of World War 1…"></textarea>
+        <button class="primary-btn" id="generateFlashcardsBtn">⚡ Generate Flashcards</button>
+      </div>
+      <div class="flashcard-deck" id="flashcardDeck" style="display:none">
+        <div class="deck-controls">
+          <button class="tool-btn" id="prevCard">◀ Prev</button>
+          <span class="card-counter" id="cardCounter">1 / 1</span>
+          <button class="tool-btn" id="nextCard">Next ▶</button>
+        </div>
+        <div class="flashcard" id="flashcard" onclick="flipCard()">
+          <div class="flashcard-inner" id="flashcardInner">
+            <div class="flashcard-front" id="flashcardFront"></div>
+            <div class="flashcard-back" id="flashcardBack"></div>
+          </div>
+          <p class="flip-hint">Click to flip</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── TAB: QUIZ ── -->
+    <section class="tab-content" id="tab-quiz">
+      <div class="quiz-setup" id="quizSetup">
+        <p class="section-label">Enter a topic and I'll quiz you on it:</p>
+        <textarea class="gen-input" id="quizTopicInput" placeholder="e.g. Photosynthesis, Python basics, French Revolution…"></textarea>
+        <div class="quiz-options">
+          <label>Questions:
+            <select id="quizCount">
+              <option value="3">3</option>
+              <option value="5" selected>5</option>
+              <option value="10">10</option>
+            </select>
+          </label>
+        </div>
+        <button class="primary-btn" id="startQuizBtn">🎯 Start Quiz</button>
+      </div>
+      <div class="quiz-area" id="quizArea" style="display:none">
+        <div class="quiz-progress">
+          <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+          <span id="quizProgress">Question 1 / 5</span>
+        </div>
+        <div class="quiz-question-card">
+          <p class="quiz-question" id="quizQuestion"></p>
+          <div class="quiz-choices" id="quizChoices"></div>
+          <div class="quiz-feedback" id="quizFeedback" style="display:none"></div>
+          <button class="primary-btn" id="quizNextBtn" style="display:none">Next →</button>
+        </div>
+      </div>
+      <div class="quiz-results" id="quizResults" style="display:none">
+        <div class="results-card">
+          <h2>Quiz Complete! 🎉</h2>
+          <p class="score-text" id="scoreText"></p>
+          <button class="primary-btn" id="retryQuizBtn">Try Again</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── TAB: SUMMARIZE ── -->
+    <section class="tab-content" id="tab-summary">
+      <div class="summary-layout">
+        <div class="summary-input-col">
+          <p class="section-label">Paste any text to summarize:</p>
+          <textarea class="gen-input tall" id="summaryInput" placeholder="Paste a paragraph, article, or textbook section…"></textarea>
+          <div class="summary-options">
+            <label>Style:
+              <select id="summaryStyle">
+                <option value="concise">Concise</option>
+                <option value="bullet">Bullet Points</option>
+                <option value="detailed">Detailed</option>
+                <option value="eli5">ELI5</option>
+              </select>
+            </label>
+          </div>
+          <button class="primary-btn" id="summarizeBtn">✨ Summarize</button>
+        </div>
+        <div class="summary-output-col">
+          <p class="section-label">Summary:</p>
+          <div class="summary-output" id="summaryOutput">
+            <p class="placeholder-text">Your summary will appear here…</p>
+          </div>
+          <button class="tool-btn" id="copySummaryBtn" style="display:none">📋 Copy</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay" style="display:none">
+    <div class="loader-dots"><span></span><span></span><span></span></div>
+  </div>
+
+  <!-- API Key Modal -->
+  <div class="modal-backdrop" id="apiModal">
+    <div class="modal">
+      <div class="modal-logo">🧠</div>
+      <h2>Welcome to AI's Second Brain</h2>
+      <p>Enter your Anthropic API key to get started. Your key is stored locally and never sent anywhere except directly to Anthropic.</p>
+      <input type="password" class="api-key-input" id="apiKeyInput" placeholder="sk-ant-…" />
+      <button class="primary-btn" id="saveKeyBtn">Get Started →</button>
+      <p class="api-hint">Get a key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a></p>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
